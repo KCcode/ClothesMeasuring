@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">a</string>
+    <string name="game_view_content_description">Game view</string> <!--added this line even make it work-->
+</resources>
