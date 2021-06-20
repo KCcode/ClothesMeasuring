@@ -1,4 +1,4 @@
 rootProject.name = "AR Clothes"
 include ':app'
 include ':unityLibrary'
-project(':unityLibrary').projectDir=new File('D:\\UnityProjects\\ARLib\\Export\\unityLibrary')
+project(':unityLibrary').projectDir=new File('D:\\UnityProjects\\ARLib\\ARBaseExport\\unityLibrary')

@@ -11,7 +11,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
-            <option value="D:/UnityProjects/ARLib/Export/unityLibrary" />
+            <option value="D:/UnityProjects/ARLib/ARBaseExport/unityLibrary" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
