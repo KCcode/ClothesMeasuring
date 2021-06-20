@@ -1,98 +1,109 @@
 package com.lennycorp.ARClothes;
 
 import android.content.Intent;
-import android.graphics.Point;
 import android.os.Bundle;
-import android.text.InputType;
 import android.util.Log;
-import android.view.Display;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
-
 import com.company.product.OverrideUnityActivity;
 
-import java.util.ArrayList;
 
 public class MainUnityActivity extends OverrideUnityActivity {
 
-    private ArrayList<EditText> etList;
-    String valueFromUnity;
+    private EditText[] etList;
+    private int focusOn;
+    private String valFromUnity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        etList = new ArrayList<>(3);
+        etList = new EditText[3];
+        focusOn = 0;
         createUI();
-        //setContentView(R.layout.activity_main_unity);
     }
-
-    public static String setToColor = "default";
-
 
     @Override
     protected void showMainActivity(String aSetToColor) {
         Intent intent = new Intent(this, MainActivity.class);
-        setToColor = aSetToColor;
         startActivity(intent);
     }
 
     @Override
     protected void displayMeasurement(double measuredVal){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                valFromUnity = Double.toString(measuredVal);
+                Log.d("UNITY MAIN: ", valFromUnity);
+
+                etList[0].setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                    @Override
+                    public void onFocusChange(View v, boolean hasFocus) {
+                        if(hasFocus){
+                            focusOn = 0;
+                        }
+                    }
+                });
+
+                etList[1].setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                    @Override
+                    public void onFocusChange(View v, boolean hasFocus) {
+                        if(hasFocus){
+                            focusOn = 1;
+                        }
+                    }
+                });
+
+                etList[2].setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                    @Override
+                    public void onFocusChange(View v, boolean hasFocus) {
+                        if(hasFocus){
+                            focusOn = 2;
+                        }
+                    }
+                });
+                etList[focusOn].setText(valFromUnity);
+            }
+        });
+
+        /*
+
         valueFromUnity = Double.toString(measuredVal);
         Log.d("UNITY MAIN: ", valueFromUnity);
-        etList.get(0).setText(valueFromUnity);
 
+        etList.get(0).setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus){
+                    val = 0;
+                }
+            }
+        });
+
+        etList.get(1).setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus){
+                    val = 1;
+                }
+            }
+        });
+
+        etList.get(2).setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus){
+                    val = 2;
+                }
+            }
+        });
+        etList.get(val).setText(valueFromUnity);*/
     }
 
     public void createUI() {
-        {
-            Button myButton = new Button(this);
-            myButton.setText("Show Main");
-            myButton.setX(10);
-            myButton.setY(500);
-
-            myButton.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    showMainActivity("");
-                    finish();
-                }
-            });
-            getUnityFrameLayout().addView(myButton, 300, 200);
-        }
-
-        {
-            Button myButton = new Button(this);
-            myButton.setText("Reset");
-            myButton.setX(320);
-            myButton.setY(500);
-            myButton.setOnClickListener( new View.OnClickListener() {
-                public void onClick(View v) {
-                    UnitySendMessage("AR Session Origin", "ResetARSession", "");
-                }
-            });
-            getUnityFrameLayout().addView(myButton, 300, 200);
-        }
-
-        {
-            Button myButton = new Button(this);
-            myButton.setText("Unload");
-            myButton.setX(630);
-            myButton.setY(500);
-
-            myButton.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    finish();
-                }
-            });
-            getUnityFrameLayout().addView(myButton, 300, 200);
-        }
-
         {
             LayoutInflater allUI = getLayoutInflater();
             View viewAll = allUI.inflate(R.layout.ar_ui, null);
@@ -108,52 +119,40 @@ public class MainUnityActivity extends OverrideUnityActivity {
                 UnitySendMessage("AR Session Origin", "ResetARSession", "");
             });
 
-            etList.add(0, viewAll.findViewById(R.id.etA));
-
+            etList[0] = viewAll.findViewById(R.id.etA);
+            etList[1] = viewAll.findViewById(R.id.etB);
+            etList[2] = viewAll.findViewById(R.id.etC);
             getUnityFrameLayout().addView(viewAll);
 
+            Button ABtn = viewAll.findViewById(R.id.btnA);
+            ABtn.setOnClickListener((v)->{
+                etList[0].getText().clear();
+            });
 
-            /*Display display = getWindowManager().getDefaultDisplay();
-            Point size = new Point();
-            display.getSize(size);
-            int height = size.y ;
+            Button BBtn = viewAll.findViewById(R.id.btnB);
+            BBtn.setOnClickListener((v)->{
+                etList[1].getText().clear();
+            });
 
-
-
-            LinearLayout panel = new LinearLayout(this);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(0,height,0,0);
-            panel.setLayoutParams(params);
-            //panel.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            panel.setOrientation(LinearLayout.VERTICAL);
-            //panel.setGravity(Gravity.BOTTOM | Gravity.CENTER);
-            getUnityFrameLayout().addView(panel);
-
-            LayoutInflater inflateA = getLayoutInflater();
-            View viewA = inflateA.inflate(R.layout.measure_layout, null);
-            EditText et = (EditText) viewA.findViewById(R.id.etMeasure);
-            et.setText("123");
-
-            panel.addView(viewA);
-
-            LayoutInflater inflateB = getLayoutInflater();
-            View viewB = inflateB.inflate(R.layout.measure_layout, null);
-            EditText etB = (EditText) viewB.findViewById(R.id.etMeasure);
-            et.setText("3456");
-
-            panel.addView(viewB);*/
-
+            Button CBtn = viewAll.findViewById(R.id.btnC);
+            CBtn.setOnClickListener((v)->{
+                etList[2].getText().clear();
+            });
         }
-/*
+
+        /*
         {
-            displayA = new EditText(this);
-            displayA.setX(20);
-            displayA.setY(750);
-            displayA.requestFocus();
-            displayA.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-            displayA.setHint("Measurement A");
-            //myEditText.setText(valueFromUnity);
-            getUnityFrameLayout().addView(displayA, 600, 200);
+            Button myButton = new Button(this);
+            myButton.setText("Unload");
+            myButton.setX(630);
+            myButton.setY(500);
+
+            myButton.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    finish();
+                }
+            });
+            getUnityFrameLayout().addView(myButton, 300, 200);
         }*/
     }
 }

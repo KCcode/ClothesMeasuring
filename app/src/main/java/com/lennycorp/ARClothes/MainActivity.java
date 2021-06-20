@@ -15,12 +15,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         View v = findViewById(R.id.btnUnload);
-        switch (MainUnityActivity.setToColor) {
+        /*switch (MainUnityActivity.setToColor) {
             case "yellow": v.setBackgroundColor(Color.YELLOW); break;
             case "red": v.setBackgroundColor(Color.RED); break;
             case "blue": v.setBackgroundColor(Color.BLUE); break;
             default: break;
-        }
+        }*/
     }
 
     public void onUnityLoad(View v) {
